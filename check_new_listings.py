@@ -39,6 +39,15 @@ import sys
 from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
 from playwright.sync_api import sync_playwright
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv()  # подхватывает переменные из .env при локальном запуске.
+                    # В GitHub Actions .env не нужен -- там секреты уже
+                    # приходят через os.environ напрямую из workflow.
+except ImportError:
+    pass  # если python-dotenv не установлен -- просто продолжаем без .env,
+          # переменные окружения могут быть заданы и другим способом
+
 # Координаты Hradec Králové hlavní nádraží (взяты из данных sreality.cz)
 STATION_LAT = 50.21475467876146
 STATION_LON = 15.809999179359096
@@ -469,8 +478,10 @@ def send_telegram_photos_album(local_paths, caption):
 def main():
     global BUILD_ID
 
-    if TELEGRAM_TOKEN == "ВСТАВЬ_СЮДА_ТОКЕН":
-        print("Сначала вставь свой токен в переменную TELEGRAM_TOKEN!")
+    if not TELEGRAM_TOKEN or not TELEGRAM_CHAT_ID:
+        print("TELEGRAM_TOKEN или TELEGRAM_CHAT_ID не заданы!")
+        print("Локально: проверь файл .env (и что установлен python-dotenv).")
+        print("В GitHub Actions: проверь Settings -> Secrets and variables -> Actions.")
         sys.exit(1)
 
     detected_build_id = fetch_current_build_id()
