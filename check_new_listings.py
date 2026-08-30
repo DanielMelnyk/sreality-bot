@@ -302,7 +302,7 @@ def fetch_photos_via_browser(hash_id, slug="hradec-kralove", max_photos=MAX_PHOT
         if len(body) < 5000:  # на всякий случай отсекаем мелкие иконки
             return
         idx = len(saved_paths)
-        path = os.path.join(PHOTOS_DIR, f"{hash_id}_{idx}.jpg")
+        path = f"{PHOTOS_DIR}/{hash_id}_{idx}.jpg"
         with open(path, "wb") as f:
             f.write(body)
         saved_paths.append(path)
