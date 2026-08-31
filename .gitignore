@@ -1,5 +1,7 @@
+sreality_seen.db
+photos/
 .env
 __pycache__/
 *.pyc
 test.py
- 
+log.txt
